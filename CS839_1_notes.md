@@ -7,10 +7,11 @@ Persistent memory - a new technology, also called non-volatile memory, or storag
 
 Features:
 + Persistent: 
-  + When you store data into persistent memory, it stays there even when your power goes off or system crashes.
+	+ When you store data into persistent memory, it stays there even when your power goes off or system crashes.
 + Having a Memory-like interface: 
-  + When talking to a hard disk, the way you do it is to do some memory-mapped I/O where you submit a request, to do an operation to a queue, the device processes that request and then provides a response - either acknowledging you wrote some data, or returning the data that you want. So you do not directly do a load instruction against the location on disk, instead, you tell the OS to fetch the block on disk, copy into memory and then in memory you do a load instruction against memory. 
+	+ When talking to a hard disk, the way you do it is to do some memory-mapped I/O where you submit a request, to do an operation to a queue, the device processes that request and then provides a response - either acknowledging you wrote some data, or returning the data that you want. So you do not directly do a load instruction against the location on disk, instead, you tell the OS to fetch the block on disk, copy into memory and then in memory you do a load instruction against memory. 
 	+ With persistent memory, we have a storage technology where you can have persistent data that can survive from crashes, and you can do direct load/store against it. So you do not have to go to the kernel to do an I/O operation to copy things into memory.
+
 + Short access time:
 	+ Almost as fast as DRAM (although still slower than DRAM).
 	+ Latency(fetch from hard disk) = milliseconds (4~5 million cycles on 1 GHz processor)
