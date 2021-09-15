@@ -52,3 +52,11 @@ Currently there is one dominant form of NVM available called 3D XPoint (cross po
 
 + Potential change in data structures:
 	+ We might want different types of data structures for NVM.
+
+### Paper reading requirements
++ Summary: your sense of what the paper is about.
++ Contributions: what you think was new, interesting, or what you got out of this paper.
++ Strengths: what you think the paper did well.
++ Weaknesses: what you think the paper gave bad assumptions, or forgot about some important cases.
++ Questions: what you think is the hardest part to understand.
+
