@@ -1,4 +1,9 @@
 ### Concepts:
++ NVMM
+	+ Non-volatile Main Memory
++ Optane DIMM
+	+ Intel's Optane DC Persistent Memory Module
+	
 + NVDIMM: non-volatile dual in-line memory module
 	+ NV(DIMM)
 	+ NV: Non-volatile memory.
@@ -53,8 +58,20 @@
 	+ Bad block management
 		+ Bad block management software, block replacement software, and the error correction code (ECC) software are necessary to manage the error bits in NAND Flash devices.
 
++ on-DIMM controller (XPController)
+	+ Memory accesss to the NVDIMM arrive first at the on-DIMM controller.
+	+ It coordinates access to the Optane media.
+	+ It performs an internal address translation for wear-leveling and bad-block management.
+	+ It maintains an **address indirection table (AIT)** for the translation.
+	+ It has a small **write-combining buffer (XPBuffer)** to merge adjacent writes.
+
++ write-combining buffer (XPBuffer)
+	+ All updates that reach the XPBuffer are already persistent because XPBuffer resides within the ADR (Asynchrnous DRAM refresh domain).
+
 + XPLine
 	+ 3D-XPoint physical media access granularity is 256 bytes.
+	+ XPController translates smaller requests into larger 256-byte accesses.
+	+ The above translation will cause "write amplification" because small stores become read-modify-write operations.
 
 + Write amplification
 	+ An undesirable phenomenon associated with flash memory and solid-state drives (SSDs) where the actual amount of information physically written to the storage media is a multiple of the logical amount intended to be written.
@@ -71,8 +88,13 @@
 + Optane DIMM performs an internal address translation for wear-leveling and bad-block management, and maintains an address indirection table (AIT) for this translation. ([src](https://thememoryguy.com/whats-inside-an-optane-dimm/#:~:text=The%20internal%20error,within%20the%20DRAM.))
 	+ The internal error correction, the encryption, and the fact that 3D XPoint Memory wears out and must use wear leveling, all cause the Optane DIMM’s critical timing path to be slower than the critical path in a DRAM DIMM, rendering the Optane DIMM unsuitable for code execution.  This, and the fact that XPoint **writes are slower than its reads**, all help to explain why an Optane DIMM is never used as the only memory in a system: there is always a DRAM alongside the Optane DIMM to provide faster access to a subset of the Optane DIMM’s data that is cached within the DRAM.
 + Memory access path
-	+ data -> on-DIMM controller for address translation -> 
-
+	+ data -> on-DIMM controller for requests' addresses translation -> access to storage media (3D-Xpoint Media).
++ Two modes of operation: Memory & AppDirect ([src p. 3](https://www.intel.com/content/dam/support/us/en/documents/memory-and-storage/data-center-persistent-mem/Intel-Optane-DC-Persistent-Memory-Quick-Start-Guide.pdf))
+	+ Memory mode
+		+ uses Optane to **expand main memory capacity without persistence**.
+		+ CPU and OS see Optane DIMM as a larger volatile portion of main memory.
+		+ Combines an Optane DIMM with DRAM DIMM on the same memory channel. DRAM serves as a direct-mapped cache for NVDIMM.
+		+ 
 ### Findings:
 + Optane DIMM has **lower latency, higher read bandwidth**, presents a memory address-based interface instead of a block-based NVMe interface.
 
