@@ -80,6 +80,11 @@
 		+ When data is first written to an SSD, the cells all start in an erased state so data can be written directly using pages (4KB or 8KB) at a time.
 		+ The SSD controller on the SSD, which manages the flash memory and interfaces with the host system, uses a logical-to-physical mapping system known as logical block addressing (LBA) and that is part of the flash translation layer (FTL).
 
++ Memory fence (Memory barrier)
+	+ A type of barrier instruction that causes a central processing unit (CPU) or compiler to enforce an ordering constraint on memory operations issued before and after the barrier instruction. 
+	+ This typically means that operations issued prior to the barrier are guaranteed to be performed before operations issued after the barrier.
+
++ Cache block size,
 
 ### Background knowledge:
 
@@ -91,7 +96,7 @@
 	+ data -> on-DIMM controller for requests' addresses translation -> access to storage media (3D-Xpoint Media).
 + Two modes of operation: Memory & AppDirect ([src p. 3](https://www.intel.com/content/dam/support/us/en/documents/memory-and-storage/data-center-persistent-mem/Intel-Optane-DC-Persistent-Memory-Quick-Start-Guide.pdf))
 	+ Memory mode
-		+ uses Optane to **expand main memory capacity without persistence**.
+		+ uses Optane to **expand main memory capacity without persistence (volatile)**.
 		+ CPU and OS see Optane DIMM as a larger volatile portion of main memory.
 		+ Combines an Optane DIMM with DRAM DIMM on the same memory channel. DRAM serves as a direct-mapped cache for NVDIMM.
 		+ 
