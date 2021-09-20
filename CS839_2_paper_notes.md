@@ -84,7 +84,7 @@
 	+ A type of barrier instruction that causes a central processing unit (CPU) or compiler to enforce an ordering constraint on memory operations issued before and after the barrier instruction. 
 	+ This typically means that operations issued prior to the barrier are guaranteed to be performed before operations issued after the barrier.
 
-+ Cache block size,
+
 
 ### Background knowledge:
 
@@ -94,12 +94,31 @@
 	+ The internal error correction, the encryption, and the fact that 3D XPoint Memory wears out and must use wear leveling, all cause the Optane DIMM’s critical timing path to be slower than the critical path in a DRAM DIMM, rendering the Optane DIMM unsuitable for code execution.  This, and the fact that XPoint **writes are slower than its reads**, all help to explain why an Optane DIMM is never used as the only memory in a system: there is always a DRAM alongside the Optane DIMM to provide faster access to a subset of the Optane DIMM’s data that is cached within the DRAM.
 + Memory access path
 	+ data -> on-DIMM controller for requests' addresses translation -> access to storage media (3D-Xpoint Media).
+
++ Cache block size (cache line): sizeof each cache block, 64 Bytes in Optane.
++ Cache size: 4 KB (DRAM) in Optane's memory mode.
+
 + Two modes of operation: Memory & AppDirect ([src p. 3](https://www.intel.com/content/dam/support/us/en/documents/memory-and-storage/data-center-persistent-mem/Intel-Optane-DC-Persistent-Memory-Quick-Start-Guide.pdf))
-	+ Memory mode
+	+ Memory mode (volatile)
 		+ uses Optane to **expand main memory capacity without persistence (volatile)**.
-		+ CPU and OS see Optane DIMM as a larger volatile portion of main memory.
+		+ CPU and OS see Optane DIMM as a larger **volatile** portion of **main memory**.
 		+ Combines an Optane DIMM with DRAM DIMM on the same memory channel. DRAM serves as a direct-mapped cache for NVDIMM.
-		+ 
+		+ CPU's memory controller manages the cache (DRAM).
+	+ App Direct mode (byte addressable persistent memory)
+		+ provides persistence, not using DRAM cache.
+		+ Optane DIMM appears as a separate, persistent memory device.
+		+ Requires an OS or virtualization environment enabled with a persistent memory-aware file system.
+		+ Applications can be modified to access App Direct capacity with direct load/store mechanisms using a persistent memory aware file system. This completely bypasses the kernel and provides the shortest code path to the persistent memory.
+	+ Two operating modes may be configured to run concurrently.
+	+ In both modes:
+		+ Optane memory can be (optionally) interleaved across channels and DIMMs
+
++ ISA support (in App Direct mode)
+	+ Applications and fily systems can access the Optane DIMMs with CPU instructions - to control store ordering.
+	+ Applications access Optane DIMM's content using store instructions (persistent store).
+	+ Problem:
+		+ Cache hierarchy can reorder stores, making recovery after a crash challenging.
+	+ 
 ### Findings:
 + Optane DIMM has **lower latency, higher read bandwidth**, presents a memory address-based interface instead of a block-based NVMe interface.
 
@@ -112,3 +131,4 @@
 ### Questions: what you think is the hardest part to understand.
 + Is Optane connected to PCIe?
 + What is the relationship between SSD and memory?
++ Why Optane DIMMs are interleaved?
