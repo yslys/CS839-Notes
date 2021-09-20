@@ -118,7 +118,7 @@
 	+ Applications access Optane DIMM's content using store instructions (persistent store).
 	+ Problem:
 		+ Cache hierarchy can reorder stores, making recovery after a crash challenging.
-	+ 
+	+ https://blog.csdn.net/qq_41961459/article/details/108439637 best source
 ### Findings:
 + Optane DIMM has **lower latency, higher read bandwidth**, presents a memory address-based interface instead of a block-based NVMe interface.
 
