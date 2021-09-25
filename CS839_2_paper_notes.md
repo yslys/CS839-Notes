@@ -84,7 +84,9 @@
 	+ A type of barrier instruction that causes a central processing unit (CPU) or compiler to enforce an ordering constraint on memory operations issued before and after the barrier instruction. 
 	+ This typically means that operations issued prior to the barrier are guaranteed to be performed before operations issued after the barrier.
 
-
++ Blocking I/O and Non-blocking I/O
+	+ Blocking IO: a given thread cannot do anything more until the IO is fully received (in the case of sockets this wait could be a long time). 
+	+ Non-blocking: an IO request is queued straight away and the function returns. The actual IO is then processed at some later point by the kernel.
 
 ### Background knowledge:
 
@@ -123,7 +125,42 @@
 		+ Use instructions to flush cache lines back to memory.
 		+ clflush, clflushopt, clwb, ntstore.
 		+ Since all the above instructions are non-blocking, the program must issue an ```sfence``` to ensure a previous cache flush, cache write back, or non-temporal store is complete and persistent.	
-		
+
++ Write back cache & Write through cache
+	+ Write through cache
+		+ Data is simultaneously updated to cache and memory.
+		+ Simpler and more reliable.
+		+ Used when there are no frequent writes to the cache
+		+ Problem: not taking the advantage of having a cache in write operation, (as the whole point of using a cache was to avoid multiple access to the main memory).
+	+ Write back cache (write deferred)
+		+ The data is updated only in the cache and updated into the memory at a later time. 
+		+ Data is updated in the memory only when the cache line is ready to be replaced. 
+		+ (cache line replacement is done using Belady’s Anomaly, Least Recently Used Algorithm, FIFO, LIFO, and others depending on the application). 
+	+ Dirty bit
+		+ Each Block in the cache needs a bit to indicate if the data present in the cache was modified(Dirty) or not modified(Clean). If it is clean there is no need to write it into the memory. 
+		+ It is designed to reduce write operation to a memory. 
+		+ If Cache fails or if the System fails or power outages the modified data will be lost. Because it’s nearly impossible to restore data from cache if lost. 
+
++ Write allocation & Write around
+	+ If write occurs to a location that is not present in the Cache (Write Miss), we use two options, Write Allocation and Write Around.
+	+ Write allocation
+		+ Data is loaded from the memory into cache and then updated.
+		+ Write allocation works with both Write back and Write through. 
+		+ It is generally used with Write Back because it is unnecessary to bring data from the memory to cache and then updating the data in both cache and main memory. Thus Write Through is often used with No write Allocate.
+	+ Write around
+		+ Data is directly written/updated to the main memory without disturbing the cache. 
+		+ It is better to use this when the data is not immediately used again.
+
++ What those instructions are:
+	+ clflush: (cache line flush) flush cachelines back to memory.
+	+ clflushopt: (clflush + optimized) clflush with weaker ordering constraints.
+	+ clwb: (cache line write back) write back (but not evict) cache lines.
+	+ ntstore: (non-temporal stores) software can use ntstore to bypass the cache hierarchy and write directly to memory, meaning that the data being stored is not going to be read again soon (i.e., no "temporal locality"). So there is no benefit to keeping the data in the processor's cache(s). 
+
++ ```pmem``` namespace
+	+ Linux manages persistent memory by creating ```pmem``` namespaces over a contiguous span of physical memory.
+	+ 
+
 ### Findings:
 + Optane DIMM has **lower latency, higher read bandwidth**, presents a memory address-based interface instead of a block-based NVMe interface.
 
