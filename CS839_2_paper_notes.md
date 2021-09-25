@@ -121,7 +121,9 @@
 	+ https://blog.csdn.net/qq_41961459/article/details/108439637 best source
 	+ Solution:
 		+ Use instructions to flush cache lines back to memory.
-		+ 
+		+ clflush, clflushopt, clwb, ntstore.
+		+ Since all the above instructions are non-blocking, the program must issue an ```sfence``` to ensure a previous cache flush, cache write back, or non-temporal store is complete and persistent.	
+		
 ### Findings:
 + Optane DIMM has **lower latency, higher read bandwidth**, presents a memory address-based interface instead of a block-based NVMe interface.
 
