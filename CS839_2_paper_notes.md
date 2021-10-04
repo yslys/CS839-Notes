@@ -176,5 +176,6 @@
 	+ Optane is a storage technology, and you can package it as a DIMM - a memory device, or you can package it as an SSD.
 	+ Optane memory DIMM is connected to memory bus, Optane SSDs are I/O devices, and connect to PCIe bus.
 + What is the relationship between SSD and memory?
+	+ SSD is slower than memory.
 + Why Optane DIMMs are interleaved?
 	+ The reason is why people build RAID storage devices. Interleaving is really RAID0.
