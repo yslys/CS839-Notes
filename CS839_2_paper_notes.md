@@ -172,5 +172,9 @@
 ### Weaknesses: what you think the paper gave bad assumptions, or forgot about some important cases.
 ### Questions: what you think is the hardest part to understand.
 + Is Optane connected to PCIe?
+	+ PCIe is an I/O bus. Optane DIMM (memory device) is connected to the memory bus. 
+	+ Optane is a storage technology, and you can package it as a DIMM - a memory device, or you can package it as an SSD.
+	+ Optane memory DIMM is connected to memory bus, Optane SSDs are I/O devices, and connect to PCIe bus.
 + What is the relationship between SSD and memory?
 + Why Optane DIMMs are interleaved?
+	+ The reason is why people build RAID storage devices. Interleaving is really RAID0.
